@@ -1,0 +1,106 @@
+version: "3.7"
+
+services:
+  {~PROJECT_NAME~}_nginx:
+    container_name: {~PROJECT_NAME~}_nginx
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - ${PORT_NGINX}:80
+    volumes:
+      - ../apps/${BE_PATH}:/var/www/app
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/nginx/app.conf:/etc/nginx/conf.d/app.conf
+    links:
+      - {~PROJECT_NAME~}_mysql
+      - {~PROJECT_NAME~}_php_fpm
+    networks:
+      - doc-network
+
+  {~PROJECT_NAME~}_php_fpm:
+    container_name: {~PROJECT_NAME~}_php_fpm
+    build:
+      args:
+        user: lara
+        uid: 1000
+      context: ./images/php
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - ${PORT_PHP_FPM}:9000
+    volumes:
+      - ../apps/${BE_PATH}:/var/www/app
+      - ./config/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./config/php/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+      - ./config/php/bashrc:/home/lara/.bashrc
+    links:
+      - {~PROJECT_NAME~}_mysql
+    environment:
+      PHP_IDE_CONFIG: serverName=Docker
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - doc-network
+
+  {~PROJECT_NAME~}_mysql:
+    container_name: {~PROJECT_NAME~}_mysql
+    image: mysql:8.0
+    restart: unless-stopped
+    ports:
+      - ${PORT_DB}:3306
+    environment:
+      MYSQL_HOST: {~PROJECT_NAME~}_mysql
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ../apps:/var/www/app
+      - ../db_volumes/mysql:/var/lib/mysql
+      - ./images/mysql:/docker-entrypoint-initdb.d
+    networks:
+      - doc-network
+
+  {~PROJECT_NAME~}_myadmin:
+    container_name: {~PROJECT_NAME~}_phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: {~PROJECT_NAME~}_mysql
+    ports:
+      - ${PORT_MYADMIN}:80
+    volumes:
+      - /sessions
+    external_links:
+      - {~PROJECT_NAME~}_mysql
+    depends_on:
+      - {~PROJECT_NAME~}_mysql
+    networks:
+      - doc-network
+
+  {~PROJECT_NAME~}_react:
+    container_name: {~PROJECT_NAME~}_react
+    build:
+      context: ../apps/${FE_PATH}
+      dockerfile: ../../docker/images/react/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../apps/${FE_PATH}:/usr/src/app
+      - ../docker/images/react/npm_start.sh:/usr/src/npm_start.sh
+    ports:
+      - ${PORT_NODE}:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true
+    depends_on:
+      - {~PROJECT_NAME~}_nginx
+      - {~PROJECT_NAME~}_php_fpm
+    links:
+      - {~PROJECT_NAME~}_nginx
+      - {~PROJECT_NAME~}_php_fpm
+    networks:
+      - doc-network
+
+networks:
+  doc-network:
+    driver: bridge

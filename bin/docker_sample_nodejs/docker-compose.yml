@@ -1,0 +1,23 @@
+version: "3.7"
+
+services:
+  {~PROJECT_NAME~}_nodejs:
+    container_name: {~PROJECT_NAME~}_nodejs
+    build:
+      context: ../
+      dockerfile: docker/images/nodejs/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../:/usr/src/app
+      - ./images/nodejs/npm_start.sh:/usr/src/npm_start.sh
+    ports:
+      - {~PORT_NODE~}:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true
+    networks:
+      - {~PROJECT_NAME~}-network
+
+networks:
+  {~PROJECT_NAME~}-network:
+    driver: bridge
