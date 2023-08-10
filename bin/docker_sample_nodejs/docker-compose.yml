@@ -5,7 +5,7 @@ services:
     container_name: {~PROJECT_NAME~}_nodejs
     build:
       context: ../
-      dockerfile: docker/images/nodejs/Dockerfile
+      dockerfile: docker_nodejs/images/nodejs/Dockerfile
     restart: unless-stopped
     volumes:
       - ../:/usr/src/app

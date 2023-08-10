@@ -4,9 +4,9 @@ set -e
 # Location of current file
 fileLocation=$PWD/$(dirname "$0")
 # Remove "/." from end of string if it exists
-if [[ $fileLocation == *"/." ]]; then
-  fileLocation="${fileLocation%/?}"
-fi
+#if [[ $fileLocation == *"/." ]]; then
+#  fileLocation="${fileLocation%/?}"
+#fi
 
 # Set root location
 initLocation="$(dirname "$fileLocation")"
@@ -20,6 +20,17 @@ if ! [ -f "$pathToDockerEnvFile" ]; then
   exit 1
 fi
 source "$pathToDockerEnvFile"
+
+
+#  phpVer=$(echo "${envVars["PHP_VERSION"]} > 8"| bc)
+#  echo $phpVer
+##  if [[ ${envVars["PHP_VERSION"]} -lt "8" ]]; then
+##    # If XDEBUG_VERSION does not exist, add it to envVars with empty string value ""
+##    envVars["XDEBUG_VERSION"]="-2.9.8"
+##  fi
+#exit
+
+
 
 # Include all files from functions folder
 for f in "$initLocation/bin/functions/"*; do source "$f"; done

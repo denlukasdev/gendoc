@@ -6,7 +6,6 @@ nodeDockerName="docker_nodejs"
 beDockerName="docker_be"
 
 function initDocker {
-#exit
   # Generate NodeJS docker if configured
   if [ "$GEN_NODE" = 1 ]; then
     generateDocker "$initLocation/bin/docker_sample_nodejs" "$initLocation/$nodeDockerName"
@@ -14,30 +13,34 @@ function initDocker {
 
   # Generate backend docker if configured
   if [ "$GEN_BACKEND" = 1 ]; then
-    generateDocker "$initLocation/bin/docker_sample_be" "$initLocation/$beDockerName"
+    generateDocker "$initLocation/bin/docker_sample_be" "$initLocation/$beDockerName" &&
+      # Copy database functions for backend
+      cp "$initLocation/bin/functions/database.sh" "$initLocation/$beDockerName/functions"
   fi
 }
 
 function generateDocker {
   pathToDockerSampleFolder=$1
   pathToDockerFolder=$2
-  echo $pathToDockerFolder
   # Remove old docker if exist and copy new from sample
   removeOldDocker "$pathToDockerFolder"
   cp -rf "$pathToDockerSampleFolder" "$pathToDockerFolder"
-  # Create .gitignore file
-  echo "*" > "$pathToDockerFolder/.gitignore"
-  # Copy bash functions
-  cp "$initLocation/bin/gendoc" "$pathToDockerFolder/act"
+
   echo "INFO: New docker folder $pathToDockerFolder created."
 
   # Replace variables in file to env variables
   replaceVariables
+
+  # Create additional files
+  createAdditionalFiles
+
+  # Copy bash functions
+  copyScripts
 }
 
 function removeOldDocker {
   while true; do
-    read -p "Old generated docker $1 will be removed. Continue? (Y/n) " yn
+    read -p "Old generated docker $1 will be removed. Continue? (y/n) " yn
     case $yn in
     [yY])
       rm -rf $1
@@ -72,10 +75,11 @@ function replaceVariables {
     fi
   done <"$pathToDockerEnvFile"
 
-  # Check and set current Xdebug version, if not exists
-  if [[ -z ${envVars["XDEBUG_VERSION"]} ]]; then
+  # Check PHP version and set relevant Xdebug version
+  envVars["XDEBUG_VERSION"]=""
+  if [[ $(echo "${envVars["PHP_VERSION"]} < 8"| bc) = 1 ]]; then
     # If XDEBUG_VERSION does not exist, add it to envVars with empty string value ""
-    envVars["XDEBUG_VERSION"]=""
+    envVars["XDEBUG_VERSION"]="-2.9.8"
   fi
 
   # Iterate through file paths
@@ -89,4 +93,18 @@ function replaceVariables {
     done
   done
   echo "INFO: Finish replaceVariables"
+}
+
+function copyScripts {
+  cp -p "$initLocation/bin/docker_act" "$pathToDockerFolder/act" && chmod +x "$pathToDockerFolder/act"
+  mkdir "$pathToDockerFolder/functions" &&
+    cp "$initLocation/bin/functions/application.sh" "$pathToDockerFolder/functions" &&
+    cp "$initLocation/bin/functions/docker.sh" "$pathToDockerFolder/functions"
+}
+
+function createAdditionalFiles {
+  # Create .gitignore file
+  echo "*" >"$pathToDockerFolder/.gitignore"
+  cp "$pathToDockerEnvFile" "$pathToDockerFolder/.env"
+
 }

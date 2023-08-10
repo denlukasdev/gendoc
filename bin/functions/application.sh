@@ -19,7 +19,3 @@ function intoFrontend {
   fi
 }
 
-# Go into mysql database of application
-function intoDatabase {
-  docker exec -it "$PROJECT_NAME""_mysql" mysql -u"$DB_USER" -p"$DB_PASSWORD" "$DB_DATABASE"
-}

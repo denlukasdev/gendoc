@@ -16,3 +16,8 @@ function createDump {
   docker exec "${PROJECT_NAME}_mysql" mysqldump -u"${DB_USER}" -p"${DB_PASSWORD}" -h "${PROJECT_NAME}"_mysql "${DB_DATABASE}" >"$1${DB_DATABASE}_$id.sql"  &&
     echo "INFO: Finish database dump"
 }
+
+# Go into mysql database of application
+function intoDatabase {
+  docker exec -it "$PROJECT_NAME""_mysql" mysql -u"$DB_USER" -p"$DB_PASSWORD" "$DB_DATABASE"
+}
