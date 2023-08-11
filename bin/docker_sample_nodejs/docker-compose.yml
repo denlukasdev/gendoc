@@ -11,7 +11,7 @@ services:
       - ../:/usr/src/app
       - ./images/nodejs/npm_start.sh:/usr/src/npm_start.sh
     ports:
-      - {~PORT_NODE~}:3000
+      - ${PORT_NODE_EXT}:${PORT_NODE_INT}
     environment:
       - CHOKIDAR_USEPOLLING=true
     stdin_open: true
