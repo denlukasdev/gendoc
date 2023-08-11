@@ -2,6 +2,9 @@
 
 ## Notes
 1. In generated docker ports and database variables could be changed in `.env` file. After update restart the container.
+2. Created database will be store in `docker_be` folder as `db_volumes` 
+3. Inside the container created aliases:  
+	`a` - php artisan;  `acc` - clear all cache data for laravel;
 
 ## List of Commands
 
