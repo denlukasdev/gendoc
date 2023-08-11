@@ -1,0 +1,46 @@
+#!/bin/bash
+set -e
+
+# Location of current file
+initLocation=$PWD/$(dirname "$0")
+
+# Remove "/." from end of string if it exists
+#if [[ $initLocation == *"/." ]]; then
+#  initLocation="${initLocation%/?}"
+#fi
+
+# Location of docker_generate.env file
+pathToDockerEnvFile="$initLocation/.env"
+
+# Include docker env variables, exit if file does not exist
+if ! [ -f "$pathToDockerEnvFile" ]; then
+  echo "WARNING: docker_generate.env file does not exist."
+  exit 1
+fi
+source "$pathToDockerEnvFile"
+
+# Include all files from functions folder
+for f in "$initLocation/functions/"*; do source "$f"; done
+
+# Define an associative array that maps keys to function names
+declare -A doc_functions=(
+# Database commands
+  ["dump-setup"]=setupDump
+  ["dump-create"]=createDump
+# Docker manage commands
+  ["start"]=dockerStart
+  ["rebuild"]=dockerRebuild
+  ["stop"]=dockerStop
+  ["rmc"]=dockerContainersDelete
+  ["status"]=dockerContainersStatus
+# Go to container commands
+  ["fe"]=intoFrontend
+  ["be"]=intoBackend
+  ["db"]=intoDatabase
+)
+# Loop through the keys in the array and execute the corresponding function
+for key in "${!doc_functions[@]}"; do
+  if [ "$key" == "$1" ]; then
+    "${doc_functions[$key]}" "${@:2}"
+  fi
+done
