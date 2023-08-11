@@ -12,3 +12,4 @@ COPY package-lock.json ./
 RUN npm i
 COPY . ./
 CMD ["npm", "start"]
+#CMD ["sh", "/usr/src/npm_start.sh"]
