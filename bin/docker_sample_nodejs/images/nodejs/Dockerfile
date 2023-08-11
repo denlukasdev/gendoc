@@ -11,4 +11,4 @@ COPY package.json ./
 COPY package-lock.json ./
 RUN npm i
 COPY . ./
-RUN npm run start
+CMD ["npm", "start"]
