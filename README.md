@@ -45,6 +45,7 @@ Command list:
 - `stop` - Stop docker environment
 - `rmc` - Remove project docker containers
 - `status` - Show the list and statuses of project docker containers
+- `log` - Show project docker logs
 - `fe <optional command>` - Go into container with application front-end if <optional command> is empty or execute <optional command> inside container from outside
 - `be <optional command>` - Go into container with application back-end if <optional command> is empty or execute <optional command> inside container from outside
 - `db` - Go into application database to mysql 
