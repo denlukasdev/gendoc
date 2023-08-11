@@ -1,4 +1,5 @@
 #!/bin/bash
+# © 2023 Denys Lukashenko denlukasdev@gmail.com
 set -e
 
 # Setup list of database dumps to database

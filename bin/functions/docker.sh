@@ -1,4 +1,5 @@
 #!/bin/bash
+# © 2023 Denys Lukashenko denlukasdev@gmail.com
 set -e
 
 # Start docker compose

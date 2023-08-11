@@ -1,4 +1,5 @@
 #!/bin/bash
+# © 2023 Denys Lukashenko denlukasdev@gmail.com
 set -e
 
 # Go into back-end PHP container to application folder or execute command from outside
