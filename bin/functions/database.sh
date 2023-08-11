@@ -11,9 +11,14 @@ function setupDump {
 # Create dump of database
 function createDump {
   echo "INFO: Start database dump creating"
-  echo "$1${DB_DATABASE}.sql"
+  if [ -n "$1" ]; then
+    path="$1"
+  else
+    path="$initLocation"
+  fi
+  echo "$path/${DB_DATABASE}.sql"
   id=$(date +'%d_%m_%Y_%H_%M_%S')
-  docker exec "${PROJECT_NAME}_mysql" mysqldump -u"${DB_USER}" -p"${DB_PASSWORD}" -h "${PROJECT_NAME}"_mysql "${DB_DATABASE}" >"$1${DB_DATABASE}_$id.sql"  &&
+  docker exec "${PROJECT_NAME}_mysql" mysqldump -u"${DB_USER}" -p"${DB_PASSWORD}" -h "${PROJECT_NAME}"_mysql "${DB_DATABASE}" >"$path/${DB_DATABASE}_$id.sql" &&
     echo "INFO: Finish database dump"
 }
 
