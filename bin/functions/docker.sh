@@ -3,8 +3,8 @@ set -e
 
 # Start docker compose
 function dockerStart {
-  docker-compose -f "$initLocation/docker-compose.yml" up -d
-  docker
+  docker-compose -f "$initLocation/docker-compose.yml" up -d &&
+    dockerContainersLog
 }
 
 # Rebuild and start docker compose
