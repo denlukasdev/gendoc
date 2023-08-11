@@ -44,7 +44,7 @@ services:
 
   {~PROJECT_NAME~}_mysql:
     container_name: {~PROJECT_NAME~}_mysql
-    image: mysql:8.0
+    image: mysql
     restart: unless-stopped
     ports:
       - ${PORT_DB}:3306
