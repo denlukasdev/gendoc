@@ -1,7 +1,7 @@
 # Generated BE Docker
 
 ## Notes
-1. In generated docker internal and external ports could be changed in `.env` file. After update restart the container.
+1. In generated docker ports and database variables could be changed in `.env` file. After update restart the container.
 
 ## List of Commands
 
