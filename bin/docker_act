@@ -33,6 +33,7 @@ declare -A doc_functions=(
   ["stop"]=dockerStop
   ["rmc"]=dockerContainersDelete
   ["status"]=dockerContainersStatus
+  ["log"]=dockerContainersLog
 # Go to container commands
   ["fe"]=intoFrontend
   ["be"]=intoBackend
