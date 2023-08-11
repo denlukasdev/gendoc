@@ -2,26 +2,11 @@
 set -e
 
 pathToDockerFolder="$initLocation/docker"
-nodeDockerName="docker_nodejs"
-beDockerName="docker_be"
-
-function initDocker {
-  # Generate NodeJS docker if configured
-  if [ "$GEN_NODE" = 1 ]; then
-    generateDocker "$initLocation/bin/docker_sample_nodejs" "$initLocation/$nodeDockerName"
-  fi
-
-  # Generate backend docker if configured
-  if [ "$GEN_BACKEND" = 1 ]; then
-    generateDocker "$initLocation/bin/docker_sample_be" "$initLocation/$beDockerName" &&
-      # Copy database functions for backend
-      cp "$initLocation/bin/functions/database.sh" "$initLocation/$beDockerName/functions"
-  fi
-}
 
 function generateDocker {
   pathToDockerSampleFolder=$1
   pathToDockerFolder=$2
+  type=$3
   # Remove old docker if exist and copy new from sample
   removeOldDocker "$pathToDockerFolder"
   cp -rf "$pathToDockerSampleFolder" "$pathToDockerFolder"
@@ -40,17 +25,22 @@ function generateDocker {
 
 function removeOldDocker {
   while true; do
-    read -p "Old generated docker $1 will be removed. Continue? (y/n) " yn
+    read -p "Old generated docker $1 will be removed. Continue? (Y/n) " yn
     case $yn in
-    [yY])
-      rm -rf $1
-      break
-      ;;
     [nN])
-      echo Docker generate caneled.
+      echo "Docker generate canceled."
       exit
       ;;
-    *) echo invalid response ;;
+    [yY] | "")
+      if [ -z "$yn" ]; then
+        echo "No input provided. Assuming Yes."
+      fi
+      rm -rf "$1"
+      break
+      ;;
+    *)
+      echo "Invalid input"
+      ;;
     esac
 
   done
@@ -77,7 +67,7 @@ function replaceVariables {
 
   # Check PHP version and set relevant Xdebug version
   envVars["XDEBUG_VERSION"]=""
-  if [[ $(echo "${envVars["PHP_VERSION"]} < 8"| bc) = 1 ]]; then
+  if [[ $(echo "${envVars["PHP_VERSION"]} < 8" | bc) = 1 ]]; then
     # If XDEBUG_VERSION does not exist, add it to envVars with empty string value ""
     envVars["XDEBUG_VERSION"]="-2.9.8"
   fi
@@ -100,11 +90,40 @@ function copyScripts {
   mkdir "$pathToDockerFolder/functions" &&
     cp "$initLocation/bin/functions/application.sh" "$pathToDockerFolder/functions" &&
     cp "$initLocation/bin/functions/docker.sh" "$pathToDockerFolder/functions"
+
+  # Copy database functions for backend
+  if [ "$type" = "be" ]; then
+    cp "$initLocation/bin/functions/database.sh" "$pathToDockerFolder/functions"
+  fi
 }
 
 function createAdditionalFiles {
   # Create .gitignore file
   echo "*" >"$pathToDockerFolder/.gitignore"
-  cp "$pathToDockerEnvFile" "$pathToDockerFolder/.env"
 
+  # Create base env variables
+  echo "PROJECT_NAME=$PROJECT_NAME" >"$pathToDockerFolder/.env"
+
+  # Add env variables for nodejs
+  if [ "$type" = "nodejs" ]; then
+    echo "# Ports could be changed after generate
+PORT_NODE_INT=$PORT_NODE_INT
+PORT_NODE_EXT=$PORT_NODE_EXT" >>"$pathToDockerFolder/.env"
+  fi
+
+  # Add env variables for be
+  if [ "$type" = "be" ]; then
+    echo "BASE_BE_URL=$BASE_BE_URL
+# Ports could be changed after generate
+PHP_VERSION=$PHP_VERSION
+PORT_NGINX=$PORT_NGINX
+PORT_PHP_FPM=$PORT_PHP_FPM
+PORT_DB=$PORT_DB
+PORT_MYADMIN=$PORT_MYADMIN
+# Database variables could be changed after generate
+DB_ROOT_PASSWORD=$DB_ROOT_PASSWORD
+DB_DATABASE=$DB_DATABASE
+DB_USER=$DB_USER
+DB_PASSWORD=$DB_PASSWORD" >>"$pathToDockerFolder/.env"
+  fi
 }

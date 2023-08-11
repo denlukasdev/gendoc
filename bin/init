@@ -1,0 +1,39 @@
+#!/bin/bash
+set -e
+
+# Location of current file
+fileLocation=$PWD/$(dirname "$0")
+# Remove "/." from end of string if it exists
+#if [[ $fileLocation == *"/." ]]; then
+#  fileLocation="${fileLocation%/?}"
+#fi
+
+# Set root location
+initLocation="$(dirname "$fileLocation")"
+
+# Location of docker_generate.env file
+pathToDockerEnvFile="$initLocation/docker_generate.env"
+
+# Include docker env variables, exit if file does not exist
+if ! [ -f "$pathToDockerEnvFile" ]; then
+  echo "WARNING: docker_generate.env file does not exist. Please copy from docker_generate.env.sample and fill the env variables."
+  exit 1
+fi
+source "$pathToDockerEnvFile"
+
+# Include generate function
+source "$initLocation/bin/functions/generate.sh"
+
+# Execute generate function
+nodeDockerName="docker_nodejs"
+beDockerName="docker_be"
+
+# Generate NodeJS docker if configured
+if [ "$GEN_NODE" = 1 ]; then
+  generateDocker "$initLocation/bin/docker_sample_nodejs" "$initLocation/$nodeDockerName" "nodejs"
+fi
+
+# Generate backend docker if configured
+if [ "$GEN_BACKEND" = 1 ]; then
+  generateDocker "$initLocation/bin/docker_sample_be" "$initLocation/$beDockerName" "be"
+fi
