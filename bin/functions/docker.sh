@@ -37,5 +37,5 @@ function dockerContainersStatus() {
 
 # Show containers log
 function dockerContainersLog() {
-  docker-compose -f "$initLocation/docker-compose.yml" logs -f
+  docker-compose -f "$initLocation/docker-compose.yml" logs -f --tail=30
 }
