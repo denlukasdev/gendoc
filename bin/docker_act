@@ -30,6 +30,7 @@ declare -A doc_functions=(
   ["dump:create"]=createDump
 # Docker manage commands
   ["start"]=dockerStart
+  ["restart"]=dockerRestart
   ["rebuild"]=dockerRebuild
   ["stop"]=dockerStop
   ["rmc"]=dockerContainersDelete
