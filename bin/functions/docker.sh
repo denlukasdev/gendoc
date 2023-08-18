@@ -8,6 +8,12 @@ function dockerStart {
     dockerContainersLog
 }
 
+# Restart docker compose
+function dockerRestart {
+  docker-compose -f "$initLocation/docker-compose.yml" restart &&
+    dockerContainersLog
+}
+
 # Rebuild and start docker compose
 function dockerRebuild() {
   docker builder prune && docker-compose -f "$initLocation/docker-compose.yml" up -d --build &&
@@ -31,5 +37,5 @@ function dockerContainersStatus() {
 
 # Show containers log
 function dockerContainersLog() {
-  docker-compose -f "$initLocation/docker-compose.yml" logs -f
+  docker-compose -f "$initLocation/docker-compose.yml" logs -f --tail=30
 }

@@ -23,6 +23,7 @@ source "$pathToDockerEnvFile"
 # Include all files from functions folder
 for f in "$initLocation/functions/"*; do source "$f"; done
 
+# TODO? Replace with switch/case?
 # Define an associative array that maps keys to function names
 declare -A doc_functions=(
 # Database commands
@@ -30,6 +31,7 @@ declare -A doc_functions=(
   ["dump:create"]=createDump
 # Docker manage commands
   ["start"]=dockerStart
+  ["restart"]=dockerRestart
   ["rebuild"]=dockerRebuild
   ["stop"]=dockerStop
   ["rmc"]=dockerContainersDelete
