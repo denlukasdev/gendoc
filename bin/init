@@ -13,7 +13,16 @@ fileLocation=$PWD/$(dirname "$0")
 initLocation="$(dirname "$fileLocation")"
 
 # Location of docker_generate.env file
-pathToDockerEnvFile="$initLocation/docker_generate.env"
+
+if [ -n "$1" ]; then
+  pathToDockerEnvFile="$initLocation/$1"
+  if ! [[ $pathToDockerEnvFile == *".env" ]]; then
+    echo "WARNING: Config for generate should be valid .env file."
+    exit 1
+  fi
+else
+  pathToDockerEnvFile="$initLocation/docker_generate.env"
+fi
 
 # Include docker env variables, exit if file does not exist
 if ! [ -f "$pathToDockerEnvFile" ]; then

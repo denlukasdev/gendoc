@@ -67,6 +67,8 @@ services:
     restart: unless-stopped
     environment:
       PMA_HOST: {~PROJECT_NAME~}_mysql
+      PMA_USER: ${DB_USER}
+      PMA_PASSWORD: ${DB_PASSWORD}
     ports:
       - ${PORT_MYADMIN}:80
     volumes:
