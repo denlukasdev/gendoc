@@ -6,8 +6,8 @@ This application generates a Docker environment for Laravel or NodeJS applicatio
 
 To install project, follow these steps:
 
-1. Fill with relevant variables file `docker_generate.env`
-2. Run the `bin/init` command to generate docker
+1. Fill with relevant variables to `.env` file
+2. Run the `bin/init` command to generate docker. If command have no arguments it will generate docker according `docker_generate.env` file or set path to custom `.env` 
 3. Copy `docker_be` folder to laravel application folder and `docker_nodejs` folder to nodeJS application folder
 4. Go to the application folder
 5. FOR BE: Update Laravel BE application `.env` file according the `docker.env` file:
