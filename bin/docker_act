@@ -15,7 +15,7 @@ pathToDockerEnvFile="$initLocation/.env"
 
 # Include docker env variables, exit if file does not exist
 if ! [ -f "$pathToDockerEnvFile" ]; then
-  echo "WARNING: docker_generate.env file does not exist."
+  echo "WARNING: .env file does not exist."
   exit 1
 fi
 source "$pathToDockerEnvFile"
