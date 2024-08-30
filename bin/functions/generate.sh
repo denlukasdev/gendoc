@@ -129,3 +129,5 @@ DB_USER=$DB_USER
 DB_PASSWORD=$DB_PASSWORD" >>"$pathToDockerFolder/.env"
   fi
 }
+# Replace variables in the template file and generate the final docker-compose.yml
+# envsubst < docker-compose.template.yml > docker-compose.yml
