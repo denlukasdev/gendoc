@@ -1,4 +1,6 @@
-FROM node:{~NODE_VERSION~}-alpine
+ARG NODE_VERSION
+
+FROM node:${NODE_VERSION}-alpine
 
 # Install Python and other dependencies
 RUN apk add --no-cache python3 python3-dev gcc g++ make

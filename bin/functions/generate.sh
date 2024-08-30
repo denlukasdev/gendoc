@@ -108,6 +108,7 @@ function createAdditionalFiles {
   # Add env variables for nodejs
   if [ "$type" = "nodejs" ]; then
     echo "# Ports could be changed after generate
+NODE_VERSION=$NODE_VERSION
 PORT_NODE_INT=$PORT_NODE_INT
 PORT_NODE_EXT=$PORT_NODE_EXT" >>"$pathToDockerFolder/.env"
   fi

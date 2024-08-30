@@ -1,11 +1,11 @@
-version: "3.7"
-
 services:
   {~PROJECT_NAME~}_nodejs:
-    container_name: {~PROJECT_NAME~}_nodejs
+    container_name: ${PROJECT_NAME}_nodejs
     build:
       context: ../
       dockerfile: docker_nodejs/images/nodejs/Dockerfile
+      args:
+        NODE_VERSION: ${NODE_VERSION}
     restart: unless-stopped
     volumes:
       - ../:/usr/src/app
@@ -16,7 +16,7 @@ services:
       - CHOKIDAR_USEPOLLING=true
     stdin_open: true
     networks:
-      - {~PROJECT_NAME~}-network
+      - ${PROJECT_NAME}-network
 
 networks:
   {~PROJECT_NAME~}-network:

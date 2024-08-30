@@ -1,4 +1,7 @@
-FROM php:{~PHP_VERSION~}-fpm
+ARG PHP_VERSION
+ARG XDEBUG_VERSION
+
+FROM php:${PHP_VERSION}-fpm
 
 # Arguments defined in docker-compose.yml
 ARG user
@@ -24,7 +27,7 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp
 RUN docker-php-ext-install -j$(nproc) pdo_mysql mbstring exif pcntl bcmath gd
 
 # Xdebug install
-RUN pecl install xdebug{~XDEBUG_VERSION~} \
+RUN pecl install xdebug${XDEBUG_VERSION} \
     && docker-php-ext-enable xdebug
 
 # Clear cache
