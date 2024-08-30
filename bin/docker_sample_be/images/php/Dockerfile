@@ -14,7 +14,14 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     nodejs \
-    npm
+    npm \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libwebp-dev
+
+# Install PHP extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp
+RUN docker-php-ext-install -j$(nproc) pdo_mysql mbstring exif pcntl bcmath gd
 
 # Xdebug install
 RUN pecl install xdebug{~XDEBUG_VERSION~} \
