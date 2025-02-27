@@ -1,3 +1,4 @@
+# Env arguments defined in docker-compose.yml
 ARG NODE_VERSION
 
 FROM node:${NODE_VERSION}-alpine

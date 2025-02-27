@@ -1,11 +1,9 @@
 services:
-  {~PROJECT_NAME~}_nodejs:
-    container_name: ${PROJECT_NAME}_nodejs
+  nodejs:
+    container_name: ${PROJECT_TAG}_nodejs
     build:
       context: ../
       dockerfile: docker_nodejs/images/nodejs/Dockerfile
-      args:
-        NODE_VERSION: ${NODE_VERSION}
     restart: unless-stopped
     volumes:
       - ../:/usr/src/app
@@ -13,11 +11,12 @@ services:
     ports:
       - ${PORT_NODE_EXT}:${PORT_NODE_INT}
     environment:
-      - CHOKIDAR_USEPOLLING=true
+      CHOKIDAR_USEPOLLING: true
+      NODE_VERSION: ${NODE_VERSION}
     stdin_open: true
     networks:
-      - ${PROJECT_NAME}-network
+      - local_network
 
 networks:
-  {~PROJECT_NAME~}-network:
+  local_network:
     driver: bridge

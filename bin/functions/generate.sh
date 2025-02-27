@@ -103,7 +103,7 @@ function createAdditionalFiles {
   echo "*" >"$pathToDockerFolder/.gitignore"
 
   # Create base env variables
-  echo "PROJECT_NAME=$PROJECT_NAME" >"$pathToDockerFolder/.env"
+  echo "PROJECT_TAG=$PROJECT_TAG" >"$pathToDockerFolder/.env"
 
   # Add env variables for nodejs
   if [ "$type" = "nodejs" ]; then
@@ -115,7 +115,7 @@ PORT_NODE_EXT=$PORT_NODE_EXT" >>"$pathToDockerFolder/.env"
 
   # Add env variables for be
   if [ "$type" = "be" ]; then
-    echo "BASE_BE_URL=$BASE_BE_URL
+    echo "HOST_NAME=$HOST_NAME
 # Ports could be changed after generate
 PHP_VERSION=$PHP_VERSION
 PORT_NGINX=$PORT_NGINX

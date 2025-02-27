@@ -36,5 +36,5 @@ To configure Xdebug on PhpStorm, follow these steps:
 
 2. Open PhpStorm Settings->PHP->CLI Interpreter->... :
 	- \+ -> From Docker -> Docker Compose -> Server: Docker ->
-	- Configuration files: `path_to_/docker-compose.yml` -> Service: `tag_php_fpm` (where `tag` is PROJECT_NAME)
+	- Configuration files: `path_to_/docker-compose.yml` -> Service: `tag_php_fpm` (where `tag` is PROJECT_TAG)
 

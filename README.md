@@ -12,11 +12,11 @@ To install project, follow these steps:
 4. Go to the application folder
 5. FOR BE: Update Laravel BE application `.env` file according the `docker.env` file:
    </br>
-   `APP_URL=http://${BASE_BE_URL}:${PORT_NGINX}`
+   `APP_URL=http://${HOST_NAME}:${PORT_NGINX}`
    </br>
    `FE_URL=http://localhost:${PORT_NODE}`
    </br>
-   `DB_HOST=${PROJECT_NAME}_mysql`
+   `DB_HOST=${PROJECT_TAG}_mysql`
    </br>
    `DB_DATABASE=${DB_DATABASE}`
    </br>
@@ -28,7 +28,7 @@ To install project, follow these steps:
 6. Run the `docker_<type>/act start` command to run docker container, where `<type>` is `nodejs` or `be`
 7. FOR BE: Run the `docker_be/act be composer install` command to install vendor packages
 8. FOR BE: Set database dump to database using command `docker_be/act dump:setup path/to/dump`
-9. You will get access to BE by path `<${BASE_BE_URL}:${PORT_NGINX}>` (ex. `localhost:8088`)
+9. You will get access to BE by path `<${HOST_NAME}:${PORT_NGINX}>` (ex. `localhost:8088`)
 10. You will get access to FE by path `localhost:<${PORT_NODE}>` (ex. `localhost:3001`)
 
 ## List of Commands
@@ -63,5 +63,5 @@ To configure Xdebug on PhpStorm, follow these steps:
 
 2. Open PhpStorm Settings->PHP->CLI Interpreter->... :
 	- \+ -> From Docker -> Docker Compose -> Server: Docker ->
-	- Configuration files: `path_to/docker-compose.yml` -> Service: `tag_php_fpm` (where `tag` is PROJECT_NAME)
+	- Configuration files: `path_to/docker-compose.yml` -> Service: `tag_php_fpm` (where `tag` is PROJECT_TAG)
 
