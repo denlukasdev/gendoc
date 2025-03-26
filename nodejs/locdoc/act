@@ -5,6 +5,12 @@ set -e
 # Location of current file
 initLocation=$PWD/$(dirname "$0")
 
+# Check if .gitignore does not exist, then create it
+if [ ! -f "$initLocation/.gitignore" ]; then
+    echo "*" > "$initLocation/.gitignore"
+    echo ".gitignore file created."
+fi
+
 # Remove "/." from end of string if it exists
 #if [[ $initLocation == *"/." ]]; then
 #  initLocation="${initLocation%/?}"
