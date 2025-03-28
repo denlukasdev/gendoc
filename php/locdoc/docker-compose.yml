@@ -12,8 +12,6 @@ services:
       - ${PORT_NGINX}:80
     volumes:
       - ../:/var/www/app
-#      - ./images/nginx/nginx.conf:/etc/nginx/nginx.conf
-#      - ./config/nginx/app.conf:/etc/nginx/conf.d/app.conf
     links:
       - mysql
       - php_fpm
@@ -35,11 +33,11 @@ services:
       - ${PORT_PHP_FPM}:9000
     volumes:
       - ../:/var/www/app
-      - ./config/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-      - ./config/php/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
-      - ./config/php/bashrc:/home/doc/.bashrc
-      - ./config/php/bash_history:/home/doc/.bash_history
-      - ./config/php/custom-php.ini:/usr/local/etc/php/conf.d/custom-php.ini
+      - ./images/php/config/bash_history:/home/doc/.bash_history
+      - ./images/php/config/bashrc:/home/doc/.bashrc
+      - ./images/php/config/custom-php.ini:/usr/local/etc/php/conf.d/custom-php.ini
+      - ./images/php/config/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+      - ./images/php/config/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     links:
       - mysql
     environment:
