@@ -5,9 +5,9 @@ set -e
 # Go into back-end PHP container to application folder or execute command from outside
 function intoBackend {
   if [ -z "$*" ]; then
-    docker exec -it "$PROJECT_TAG""_php_fpm" bash
+    docker exec -it "$PROJECT_TAG""_php_fpm" /bin/bash
   else
-    docker exec -it "$PROJECT_TAG""_php_fpm" sh -c "$*"
+    docker exec -it "$PROJECT_TAG""_php_fpm" /bin/bash -c "$*"
   fi
 }
 

@@ -1,0 +1,5 @@
+# Add aliases to the container system
+alias a='php artisan'
+alias acc='php artisan cache:clear && php artisan config:clear && php artisan route:clear'
+alias pest='./vendor/bin/pest'
+alias pcs='./vendor/bin/phpcs --standard=phpcs.xml'

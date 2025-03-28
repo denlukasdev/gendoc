@@ -1,56 +1,60 @@
 services:
-  {~PROJECT_NAME~}_nginx:
-    container_name: ${PROJECT_NAME}_nginx
-    image: nginx:alpine
+  nginx:
+    container_name: ${PROJECT_TAG}_nginx
+    build:
+      args:
+        PROJECT_TAG: ${PROJECT_TAG}
+        HOST_NAME: ${HOST_NAME}
+      context: images/nginx
+      dockerfile: Dockerfile
     restart: unless-stopped
     ports:
       - ${PORT_NGINX}:80
     volumes:
       - ../:/var/www/app
-      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./config/nginx/app.conf:/etc/nginx/conf.d/app.conf
     links:
-      - ${PROJECT_NAME}_mysql
-      - ${PROJECT_NAME}_php_fpm
+      - mysql
+      - php_fpm
     networks:
-      - ${PROJECT_NAME}-network
+      - local_network
 
-  {~PROJECT_NAME~}_php_fpm:
-    container_name: ${PROJECT_NAME}_php_fpm
+  php_fpm:
+    container_name: ${PROJECT_TAG}_php_fpm
     build:
       args:
         user: doc
         uid: 1000
         PHP_VERSION: ${PHP_VERSION}
         XDEBUG_VERSION: ${XDEBUG_VERSION}
-      context: ./images/php
+      context: images/php
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
       - ${PORT_PHP_FPM}:9000
     volumes:
       - ../:/var/www/app
-      - ./config/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-      - ./config/php/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
-      - ./config/php/bashrc:/home/doc/.bashrc
-      - ./config/php/bash_history:/home/doc/.bash_history
+      - ./images/php/config/bash_history:/home/doc/.bash_history
+      - ./images/php/config/bashrc:/home/doc/.bashrc
+      - ./images/php/config/custom-php.ini:/usr/local/etc/php/conf.d/custom-php.ini
+      - ./images/php/config/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+      - ./images/php/config/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     links:
-      - ${PROJECT_NAME}_mysql
+      - mysql
     environment:
       PHP_IDE_CONFIG: serverName=Docker
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
-      - ${PROJECT_NAME}-network
+      - local_network
 
-  {~PROJECT_NAME~}_mysql:
-    container_name: ${PROJECT_NAME}_mysql
+  mysql:
+    container_name: ${PROJECT_TAG}_mysql
     image: mysql
     restart: unless-stopped
     ports:
       - ${PORT_DB}:3306
     environment:
-      MYSQL_HOST: ${PROJECT_NAME}_mysql
+      MYSQL_HOST: ${PROJECT_TAG}_mysql
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_USER: ${DB_USER}
@@ -59,14 +63,14 @@ services:
       - ./db_volumes/mysql:/var/lib/mysql
       - ./images/mysql:/docker-entrypoint-initdb.d
     networks:
-      - ${PROJECT_NAME}-network
+      - local_network
 
-  {~PROJECT_NAME~}_myadmin:
-    container_name: ${PROJECT_NAME}_phpmyadmin
+  myadmin:
+    container_name: ${PROJECT_TAG}_phpmyadmin
     image: phpmyadmin/phpmyadmin
     restart: unless-stopped
     environment:
-      PMA_HOST: ${PROJECT_NAME}_mysql
+      PMA_HOST: ${PROJECT_TAG}_mysql
       PMA_USER: ${DB_USER}
       PMA_PASSWORD: ${DB_PASSWORD}
     ports:
@@ -74,12 +78,12 @@ services:
     volumes:
       - /sessions
     external_links:
-      - ${PROJECT_NAME}_mysql
+      - mysql
     depends_on:
-      - ${PROJECT_NAME}_mysql
+      - mysql
     networks:
-      - ${PROJECT_NAME}-network
+      - local_network
 
 networks:
-  {~PROJECT_NAME~}-network:
+  local_network:
     driver: bridge
